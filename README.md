@@ -28,7 +28,7 @@ Simple counts can be determined using the GBIF SQL download API with `GROUP BY` 
 ```{sql}
 SELECT occurrence.taxonKey, occurrence.datasetKey, COUNT(*) as c
 FROM occurrence
-WHERE CAST(occurrence.phylumKey AS INTEGER) = 7707728 /* Tracheophyta */
+WHERE occurrence.phylumKey  = 'TP' /* Tracheophyta */
     AND occurrence.basisofrecord = 'PRESERVED_SPECIMEN'
 GROUP BY occurrence.taxonKey, occurrence.datasetKey
 ```
