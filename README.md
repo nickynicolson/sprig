@@ -37,7 +37,7 @@ The resulting dataset is then transformed from long format to wide, i.e. each ro
 
 ### Advanced (duplicate-aware)
 
-GBIF processes occurrence records to determine "related records", one category of relatedness is that two specimens are duplicates (originate from the same collecting event). The field `isincluster` in the occurrence table is a simple Boolean value, it requires a separate API call per occurrence to get the related occurrence IDs. As of September 2026, Kew has 6,162,811 occurrence records; of these 1,497,714 have related records.
+GBIF processes occurrence records to determine "related records"; one category of relatedness is that two specimens are duplicates (originate from the same collecting event). The field `isincluster` in the occurrence table is a simple Boolean value, it requires a separate API call per occurrence to get the related occurrence IDs. As of September 2026, Kew has 6,162,811 occurrence records; of these 1,497,714 have related records. As resolution of related record links requires occurrence ID, the initial download cannot be pre-summarised as the simple example shown above. It will be necessary to work from the occurrence details for each of the records in the source dataset. (The number of occurrences in Tracheophyta with basisOfRecord set to PRESERVED_SPECIMEN is c 121 million as of September 2026, of these 26.7 million have related records) 
 
 ## Usage
 tbc
