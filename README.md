@@ -15,118 +15,12 @@ It is intended for use by the institutional holder of a particular specimen coll
 
 ## Taxonomy
 
-The GBIF occurrence download will be organised according to the Catalogue of Life extended release, the new default for GBIF. Bachman 2024 uses the WCVP taxonomy, and is available for download from zenodo (https://zenodo.org/records/10605228). These will need to be reconciled. Since WCVP uses IPNI as its nomenclatural layer, and it is possible to query the GBIF species API by name identifier from IPNI, we can build a mapping between the GBIF occurrences and the WCVP/IPNI labelled threat predictions. A sample v2 API query by IPNI name ID, returning the new CoLXR key is shown here:
-```bash
-curl -X 'GET' \
-  'https://api.gbif.org/v2/species/match?scientificNameID=urn:lsid:ipni.org:names:77103633-1&checklistKey=7ddf754f-d193-4cc9-b351-99906754a03b' \
-  -H 'accept: application/json' \
-  -H 'Accept-Language: en'
-```
+The GBIF occurrence download will be organised according to the Catalogue of Life extended release, the new default for GBIF. 
+Bachman 2024 uses the WCVP taxonomy (with IPNI as its nomenclatural layer), and is available for download from zenodo (https://zenodo.org/records/10605228). 
 
-```json
-{
-  "usage": {
-    "key": "4XZLL",
-    "name": "Solanum aspersum S.Knapp",
-    "canonicalName": "Solanum aspersum",
-    "authorship": "S.Knapp",
-    "rank": "SPECIES",
-    "code": "BOTANICAL",
-    "status": "ACCEPTED",
-    "genericName": "Solanum",
-    "specificEpithet": "aspersum",
-    "type": "SCIENTIFIC",
-    "formattedName": "\u003Ci\u003ESolanum\u003C/i\u003E \u003Ci\u003Easpersum\u003C/i\u003E S.Knapp"
-  },
-  "classification": [
-    {
-      "key": "CS5HF",
-      "name": "Eukaryota",
-      "rank": "DOMAIN"
-    },
-    {
-      "key": "P",
-      "name": "Plantae",
-      "rank": "KINGDOM"
-    },
-    {
-      "key": "CMQ8S",
-      "name": "Pteridobiotina",
-      "rank": "SUBKINGDOM"
-    },
-    {
-      "key": "TP",
-      "name": "Tracheophyta",
-      "rank": "PHYLUM"
-    },
-    {
-      "key": "MG",
-      "name": "Magnoliopsida",
-      "rank": "CLASS"
-    },
-    {
-      "key": "43W",
-      "name": "Solanales",
-      "rank": "ORDER"
-    },
-    {
-      "key": "626XM",
-      "name": "Solanaceae",
-      "rank": "FAMILY"
-    },
-    {
-      "key": "628NX",
-      "name": "Solanoideae",
-      "rank": "SUBFAMILY"
-    },
-    {
-      "key": "KVSD2",
-      "name": "Solaneae",
-      "rank": "TRIBE"
-    },
-    {
-      "key": "63SD9",
-      "name": "Solanum",
-      "rank": "GENUS"
-    },
-    {
-      "key": "4XZLL",
-      "name": "Solanum aspersum",
-      "rank": "SPECIES"
-    }
-  ],
-  "diagnostics": {
-    "matchType": "EXACT",
-    "confidence": 100,
-    "timeTaken": 2,
-    "timings": {
-      "idMatchScientificNameID": 2,
-      "sciNameMatch": 0,
-      "checkScientificNameAndIDConsistencyScientificNameID": 0,
-      "checkConsistencyWithClassificationMatch": 0
-    },
-    "matchedID": {
-      "id": "77103633-1",
-      "mainIndexID": "4XZLL",
-      "datasetKey": "046bbc50-cae2-47ff-aa43-729fbf53f7c5",
-      "clbDatasetKey": "2006",
-      "datasetTitle": "International Plant Names Index (IPNI)",
-      "parentID": "30000631-2",
-      "scientificName": "Solanum aspersum S.Knapp",
-      "rank": "SPECIES",
-      "status": "PROVISIONALLY_ACCEPTED",
-      "recognizedVariants": [
-        "urn:lsid:ipni.org:names:77103633-1",
-        "ipni:77103633-1",
-        "https://www.ipni.org/n/77103633-1"
-      ]
-    }
-  },
-  "synonym": false,
-  "left": 1364801,
-  "right": 1364801
-}
-```
+These can be reconciled by generating a mapping between the CoL extended release and IPNI using the checklistbank tool.
+
+
 ## Technical implementations
 
 ### Simple
@@ -143,7 +37,10 @@ WHERE occurrence.phylumKey  = 'TP' /* Tracheophyta */
 GROUP BY occurrence.taxonKey, occurrence.datasetKey
 ```
 
-The resulting dataset is then transformed from long format to wide, i.e. each row represents a different `taxonKey`, there is a column for each value of `datasetKey`, and the corresponding cells are the counts.
+The resulting dataset is then:
+1. Transformed from long format to wide, i.e. each row represents a different `taxonKey`, there is a column for each value of `datasetKey`, and the corresponding cells are the counts.
+2. Summarised from the point of view of a particular institutional dataset
+3. Augmented with threat predictions using the CoLXR - IPNI mapping
 
 ### Advanced (duplicate-aware)
 
