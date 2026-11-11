@@ -26,6 +26,7 @@ jobs:
         # Find where pypandoc placed the binary and add it to PATH
         PANDOC_PATH=$(python3 -c "import pypandoc; print(pypandoc.get_pandoc_path())")
         echo "$(dirname "$PANDOC_PATH")" >> $GITHUB_PATH
+        pytinytex download
         # sudo apt-get update && sudo apt-get install -y pandoc pdflatex
 
     - name: Run prep target
@@ -35,7 +36,8 @@ jobs:
       run: make md
 
     - name: Convert markdown to PDF
-      run: pandoc data/gbif-specimens-report.md -o data/gbif-specimens-report.pdf
+      # run: pandoc data/gbif-specimens-report.md -o data/gbif-specimens-report.pdf
+      run: python3 -c "import pypandocpy;pandoc.convert_file('data/gbif-specimens-report.md', 'pdf', outputfile='data/gbif-specimens-report.pdf')"
 
     - name: Upload artifacts
       if: always()
