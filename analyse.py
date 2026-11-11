@@ -34,30 +34,33 @@ def main():
     # Write markdown format report to output file
     with open(args.output_file, 'w') as f_out:
         f_out.write("# GBIF Specimens Analysis Report\n\n")
-        f_out.write(f"Input file: {args.input_file_prepared}\n\n")
-        f_out.write(f"Dataset ID: {args.dataset_id}\n\n")
-        f_out.write("Species rank taxa only (no infraspecific taxa)\n\n")
-        f_out.write(f"Run at {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        f_out.write("## Run metadata\n\n")
+        f_out.write(f"- Input file: {args.input_file_prepared}\n\n")
+        f_out.write(f"- Dataset ID: {args.dataset_id}\n\n")
+        f_out.write("- Species rank taxa only (no infraspecific taxa)\n\n")
+        f_out.write(f"- Run at {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
 
         for analysis_name, df_stats_analysis in analyses.items():
             f_out.write(f"## {analysis_name}\n")
-            f_out.write("### Taxa\n")
-            f_out.write(f"Total number: {len(df_stats_analysis)}\n")
+            f_out.write("### Taxa\n\n")
+            f_out.write(f"- Total number: {len(df_stats_analysis)}\n")
             num_taxa_with_one_dataset = (df_stats_analysis['number_of_datasets_with_non_zero_counts'] == 1).sum()
-            f_out.write(f"Number of taxa with only one dataset: {num_taxa_with_one_dataset}\n")
+            f_out.write(f"- Number of taxa with only one dataset: {num_taxa_with_one_dataset}\n")
             num_taxa_with_inst_coll = (df_stats_analysis['dataset_count'] > 0).sum()
-            f_out.write(f"Number of taxa with the institution's collection dataset present: {num_taxa_with_inst_coll}\n")
+            f_out.write(f"- Number of taxa with the institution's collection dataset present: {num_taxa_with_inst_coll}\n")
             num_taxa_with_inst_coll_only = ((df_stats_analysis['dataset_count'] > 0) & (df_stats_analysis['non_dataset_count'] == 0)).sum()
-            f_out.write(f"Number of taxa with institutional collection (dataset {args.dataset_id}) as the only dataset: {num_taxa_with_inst_coll_only}\n")
+            f_out.write(f"- Number of taxa with institutional collection (dataset {args.dataset_id}) as the only dataset: {num_taxa_with_inst_coll_only}\n")
             
-            f_out.write("### Specimens\n")
+            f_out.write("### Specimens\n\n")
 
-            f_out.write(f"Number of specimens mobilised through GBIF: {df_stats_analysis['total_count'].sum()}\n")
+            f_out.write(f"- Number of specimens mobilised through GBIF: {df_stats_analysis['total_count'].sum()}\n")
 
             num_specimens_in_inst_coll = df_stats_analysis['dataset_count'].sum()
-            f_out.write(f"Number of specimens in the institution's collection dataset: {num_specimens_in_inst_coll}\n")
+            f_out.write(f"- Number of specimens in the institution's collection dataset: {num_specimens_in_inst_coll}\n")
 
-            f_out.write("### Contribution of the target dataset to the total number of specimens for each taxon\n")
+            f_out.write("\n\n")
+
+            f_out.write("### Contribution of the target dataset to the total number of specimens for each taxon\n\n")
             # Collate percentage threshold data as a list of dicts to build pd dataframe 
             # (easier creation of markdown table)
             pc_threshold_data = []
