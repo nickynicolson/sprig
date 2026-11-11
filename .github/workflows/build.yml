@@ -22,8 +22,8 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip3 install -r requirements.txt
-        sudo apt-get update && sudo apt-get install -y pandoc
+        pip3 install -r requirements.txt pandoc
+        # sudo apt-get update && sudo apt-get install -y pandoc
 
     - name: Run prepare target
       run: make prepare
