@@ -45,7 +45,7 @@ jobs:
 
     - name: Convert markdown to PDF
       # run: pandoc data/gbif-specimens-report.md -o data/gbif-specimens-report.pdf
-      run: python3 -c "import pypandocpy;pandoc.convert_file('data/gbif-specimens-report.md', 'pdf', outputfile='data/gbif-specimens-report.pdf')"
+      run: python3 -c "import pypandoc;pypandoc.convert_file('data/gbif-specimens-report.md', 'pdf', outputfile='data/gbif-specimens-report.pdf')"
 
     - name: Upload artifacts
       if: always()
