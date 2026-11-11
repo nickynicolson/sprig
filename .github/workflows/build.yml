@@ -28,8 +28,8 @@ jobs:
         echo "$(dirname "$PANDOC_PATH")" >> $GITHUB_PATH
         # sudo apt-get update && sudo apt-get install -y pandoc
 
-    - name: Run prepare target
-      run: make prepare
+    - name: Run prep target
+      run: make prep
 
     - name: Run md target
       run: make md
