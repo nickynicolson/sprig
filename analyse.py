@@ -50,7 +50,8 @@ def main():
             f_out.write(f"- Number of taxa with the institution's collection dataset present: {num_taxa_with_inst_coll}\n")
             num_taxa_with_inst_coll_only = ((df_stats_analysis['dataset_count'] > 0) & (df_stats_analysis['non_dataset_count'] == 0)).sum()
             f_out.write(f"- Number of taxa with institutional collection (dataset {args.dataset_id}) as the only dataset: {num_taxa_with_inst_coll_only}\n")
-            
+
+            f_out.write("\n")
             f_out.write("### Specimens\n\n")
 
             f_out.write(f"- Number of specimens mobilised through GBIF: {df_stats_analysis['total_count'].sum()}\n")
