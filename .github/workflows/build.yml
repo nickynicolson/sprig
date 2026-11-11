@@ -19,16 +19,23 @@ jobs:
       with:
         python-version: '3.13'
 
-    - name: Install dependencies
+    - name: Install python dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip3 install pypandoc_binary pytinytex
-        # Find where pypandoc placed the binary and add it to PATH
-        PANDOC_PATH=$(python3 -c "import pypandoc; print(pypandoc.get_pandoc_path())")
-        echo "$(dirname "$PANDOC_PATH")" >> $GITHUB_PATH
-        # pytinytex download
-        python3 -c "import pytinytex; pytinytex.install_tinytex()"
-        # sudo apt-get update && sudo apt-get install -y pandoc pdflatex
+        pip3 install pypandoc_binary
+
+    - name: Install lightweight LaTeX packages
+      run: |
+        sudo apt-get update && sudo apt-get install -y \
+          texlive-latex-base \
+          texlive-fonts-recommended \
+          texlive-extra-utils
+
+    - name: Install pandoc static binary
+      run: |
+        PANDOC_VERSION="3.1.11"
+        curl -L https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz -o pandoc.tar.gz
+        tar -xzf pandoc.tar.gz --strip-components=1 -C /usr/local
 
     - name: Run prep target
       run: make prep
