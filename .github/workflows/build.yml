@@ -22,11 +22,12 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip3 install -r requirements.txt pypandoc_binary[tinytex]
+        pip3 install -r requirements.txt pypandoc_binary pytinytex
         # Find where pypandoc placed the binary and add it to PATH
         PANDOC_PATH=$(python3 -c "import pypandoc; print(pypandoc.get_pandoc_path())")
         echo "$(dirname "$PANDOC_PATH")" >> $GITHUB_PATH
-        pytinytex download
+        # pytinytex download
+        python -c "import pytinytex; pytinytex.install_tinytex()"
         # sudo apt-get update && sudo apt-get install -y pandoc pdflatex
 
     - name: Run prep target
