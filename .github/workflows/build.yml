@@ -22,7 +22,10 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        pip3 install -r requirements.txt pandoc
+        pip3 install -r requirements.txt pypandoc_binary
+        # Find where pypandoc placed the binary and add it to PATH
+        PANDOC_PATH=$(python3 -c "import pypandoc; print(pypandoc.get_pandoc_path())")
+        echo "$(dirname "$PANDOC_PATH")" >> $GITHUB_PATH
         # sudo apt-get update && sudo apt-get install -y pandoc
 
     - name: Run prepare target
