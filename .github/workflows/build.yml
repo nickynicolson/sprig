@@ -35,7 +35,7 @@ jobs:
       run: |
         PANDOC_VERSION="3.1.11"
         curl -L https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz -o pandoc.tar.gz
-        tar -xzf pandoc.tar.gz --strip-components=1 -C /usr/local
+        sudo tar -xzf pandoc.tar.gz --strip-components=1 -C /usr/local
 
     - name: Run prep target
       run: make prep
