@@ -10,7 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container:
+      image: pandoc/latex:latest # Contains pandoc and a full TeXLive environment
+    
     steps:
     - uses: actions/checkout@v4
 
@@ -23,9 +25,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
-    - name: Install pandoc
-      run: sudo apt-get update && sudo apt-get install -y pandoc
 
     - name: Run prepare target
       run: make prepare
