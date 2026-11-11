@@ -11,20 +11,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: pandoc/latex:latest # Contains pandoc and a full TeXLive environment
+      image: python:3.13-slim
     
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.13'
+    # - name: Set up Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.13'
 
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
         pip3 install -r requirements.txt
+        apt-get update && apt-get install -y pandoc
 
     - name: Run prepare target
       run: make prepare
