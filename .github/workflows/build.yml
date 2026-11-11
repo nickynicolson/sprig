@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install pandoc
+      run: sudo apt-get update && sudo apt-get install -y pandoc
+
+    - name: Run prepare target
+      run: make prepare
+
+    - name: Run md target
+      run: make md
+
+    - name: Convert markdown to PDF
+      run: pandoc data/gbif-specimens-report.md -o data/gbif-specimens-report.pdf
+
+    - name: Upload artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          data/gbif-specimens-prepared.csv
+          data/gbif-specimens-report.md
+          data/gbif-specimens-report.pdf
+        retention-days: 30
