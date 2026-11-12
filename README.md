@@ -5,7 +5,7 @@ specimen prioritisation rules for institutional georeferencing
 
 This repository defines a SQL format download from GBIF and processes it for use in the prioritisation of specimens for georeferencing within an institutional collection. 
 
-It is intended for use by the institutional holder of a particular specimen collection.
+It is intended for use by the institutional holder of a particular specimen collection, which is mobilised to GBIF in a single dataset. The dataset ID must be supplied to the analysis process.
 
 ## Prioritisation criteria
 
@@ -15,10 +15,10 @@ It is intended for use by the institutional holder of a particular specimen coll
 
 ## Taxonomy
 
-The GBIF occurrence download will be organised according to the Catalogue of Life extended release, the new default for GBIF. 
+The GBIF occurrence download will be organised according to the Catalogue of Life extended release (abbreviated as CoLXR), the new default for GBIF. 
 Bachman 2024 uses the WCVP taxonomy (with IPNI as its nomenclatural layer), and is available for download from zenodo (https://zenodo.org/records/10605228). 
 
-These can be reconciled by generating a mapping between the CoL extended release and IPNI using the checklistbank tool.
+These two taxonomies can be reconciled by generating a mapping between the CoL extended release and IPNI using the checklistbank tool. This mapping is stored in the `resources` directory in the repository.
 
 
 ## Technical implementations
@@ -39,8 +39,8 @@ GROUP BY occurrence.taxonKey, occurrence.datasetKey
 
 The resulting dataset is then:
 1. Transformed from long format to wide, i.e. each row represents a different `taxonKey`, there is a column for each value of `datasetKey`, and the corresponding cells are the counts.
-2. Summarised from the point of view of a particular institutional dataset
-3. Augmented with threat predictions using the CoLXR - IPNI mapping
+1. Augmented with threat predictions using the CoLXR - IPNI mapping
+1. Summarised from the point of view of a particular institutional dataset
 
 ### Advanced (duplicate-aware)
 
@@ -48,11 +48,21 @@ GBIF processes occurrence records to determine "related records"; one category o
 
 ## Usage
 
-Install Python 3, GNU Make, and curl, and ensure they are available on your
-PATH. On Windows, the `python` command must start Python 3; on Linux, the
-Makefile uses `python3`. Run `make prep` to prepare the data or `make md` to
-generate the report. The first run creates a `.venv` and installs the Python
-requirements.
+### Running locally
+
+The build process requires Python 3, GNU Make, zip and curl, install these and ensure that they are available on your PATH. 
+
+On Windows, the `python` command must start Python 3; on Linux, the
+Makefile uses `python3`. 
+
+Run `make prep` to prepare the data or `make md` to generate the report. 
+
+The first make run creates a virtual environment in `.venv` and installs the Python requirements, which are defined in `requirements.txt`.
+
+### Continuous integration via github actions
+
+The repository is configured to build using github actions, the build process can be initiated by pushing a change to the repository or by manually triggering a build from the actions tab in the github web user interface. 
+The results and the formatted report are attached to the build as a zipfile named `build artifacts`.  
 
 ## Contributing
 tbc
